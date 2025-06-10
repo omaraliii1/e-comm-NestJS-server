@@ -1,6 +1,5 @@
 import {
   Get,
-  Post,
   Body,
   Param,
   Patch,
