@@ -31,7 +31,7 @@ export class ReviewsController {
   async create(
     @Body() createReviewDto: CreateReviewDto,
     @CurrentUser() currentUser: IUser,
-  ): Promise<BaseResponse<Review>> {
+  ): Promise<BaseResponse<ReviewDocument>> {
     const createdReview = await this.reviewsService.create(
       createReviewDto,
       currentUser._id,
@@ -48,7 +48,7 @@ export class ReviewsController {
   async remove(
     @Param('id') id: string,
     @CurrentUser() currentUser: IUser,
-  ): Promise<BaseResponse<Review>> {
+  ): Promise<BaseResponse<ReviewDocument>> {
     const existingReview = await this.reviewsService.findOne(id);
 
     if (
