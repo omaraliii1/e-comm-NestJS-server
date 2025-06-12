@@ -27,5 +27,3 @@ export class BaseReviewDto {
 }
 
 export class CreateReviewDto extends BaseReviewDto {}
-
-export class UpdateReviewDto extends PartialType(BaseReviewDto) {}
