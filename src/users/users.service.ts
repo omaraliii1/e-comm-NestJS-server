@@ -53,7 +53,8 @@ export class UsersService {
   async findById(id: string): Promise<UserDocument> {
     const user = await this.userModel
       .findById(id)
-      .select('username email role reviews')
+      .select('username email role')
+      .populate('products')
       .exec();
     if (!user) throw new NotFoundException('User not found');
     return user;
