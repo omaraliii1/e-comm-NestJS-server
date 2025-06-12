@@ -4,7 +4,7 @@ import { EUserRole } from '../enums/user.enum';
 
 export type UserDocument = HydratedDocument<User>;
 
-@Schema({ timestamps: true })
+@Schema()
 export class User {
   _id: Types.ObjectId;
 

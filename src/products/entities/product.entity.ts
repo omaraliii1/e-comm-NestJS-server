@@ -2,12 +2,10 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument, Types } from 'mongoose';
 import { User } from '../../users/entities/user.entity';
 import { Category } from 'src/categories/entities/category.entity';
-// @IsUrl should NOT be imported or used here as it's for DTOs, not Mongoose entities.
-// import { IsUrl } from 'class-validator';
 
 export type ProductDocument = HydratedDocument<Product>;
 
-@Schema({ timestamps: true })
+@Schema()
 export class Product {
   @Prop({ required: true })
   name: string;
