@@ -21,7 +21,7 @@ export class ProductsService {
 
     const productData = {
       ...createProductDto,
-      category: existingCategory,
+      category: existingCategory._id,
     };
 
     const createdProduct = await new this.productModel(productData).populate(
@@ -68,7 +68,7 @@ export class ProductsService {
       const category = await this.categoryService.findByName(
         updateProductDto.categoryName,
       );
-      product.category = category;
+      product.category = category._id;
     }
 
     product.set(updateProductDto);
