@@ -27,24 +27,27 @@ export class ProductsService {
       category: existingCategory,
     };
 
-    const createdProduct = new this.productModel(productData).save();
+    const createdProduct = await new this.productModel(productData).populate(
+      'supplier',
+      'username',
+    );
+
+    createdProduct.save();
+
     return createdProduct;
   }
 
   async findAll(): Promise<ProductDocument[]> {
     const result = await this.productModel
       .find()
-      .populate('supplier', 'username email')
+      .populate('supplier', 'username')
+      .populate('category', 'name')
       .exec();
 
     return result;
   }
 
   async findOne(id: string): Promise<ProductDocument> {
-    if (!Types.ObjectId.isValid(id)) {
-      throw new NotFoundException(`Product with ID "${id}" not found.`);
-    }
-
     const product = await this.productModel
       .findById(id)
       .populate('supplier', 'id username email')
@@ -79,9 +82,6 @@ export class ProductsService {
 
   async remove(id: string): Promise<ProductDocument> {
     const currentProduct = await this.findOne(id);
-    const supplie = currentProduct.supplier;
-
-    console.log(currentProduct);
     await currentProduct.deleteOne();
     return currentProduct;
   }
