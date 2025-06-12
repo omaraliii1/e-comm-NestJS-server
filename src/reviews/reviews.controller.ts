@@ -27,7 +27,6 @@ export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
 
   @Post()
-  @Roles(EUserRole.USER, EUserRole.ADMIN)
   async create(
     @Body() createReviewDto: CreateReviewDto,
     @CurrentUser() currentUser: IUser,
