@@ -3,6 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import { IJwtPayload } from '../interfaces/jwtpayload.interface';
+import { IUser } from 'src/users/interfaces/user.interface';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -31,7 +32,7 @@ export class AuthGuard implements CanActivate {
 
     try {
       const decoded = this.jwtService.verify(token) as IJwtPayload;
-      const user = await this.usersService.findById(decoded.id);
+      const user = (await this.usersService.findById(decoded.id)) as IUser;
 
       if (!user) return false;
 
