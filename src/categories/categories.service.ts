@@ -11,7 +11,9 @@ export class CategoriesService {
     private readonly categoryModel: Model<CategoryDocument>,
   ) {}
 
-  async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
+  async create(
+    createCategoryDto: CreateCategoryDto,
+  ): Promise<CategoryDocument> {
     const categoryExists = await this.findByName(createCategoryDto.name, false);
     if (categoryExists) {
       throw new NotFoundException(
@@ -23,14 +25,11 @@ export class CategoriesService {
     return createdCategory;
   }
 
-  async findAll(): Promise<Category[]> {
+  async findAll(): Promise<CategoryDocument[]> {
     return this.categoryModel.find().exec();
   }
 
   async findOne(id: string): Promise<CategoryDocument> {
-    if (!Types.ObjectId.isValid(id)) {
-      throw new NotFoundException(`Category with ID "${id}" not found.`);
-    }
     const category = await this.categoryModel.findById(id).exec();
     if (!category) {
       throw new NotFoundException(`Category with ID "${id}" not found.`);
@@ -55,7 +54,7 @@ export class CategoriesService {
   async update(
     id: string,
     updateCategoryDto: UpdateCategoryDto,
-  ): Promise<Category> {
+  ): Promise<CategoryDocument> {
     const category = await this.findOne(id);
 
     if (updateCategoryDto.name && category.name !== updateCategoryDto.name) {
@@ -76,7 +75,7 @@ export class CategoriesService {
     return updatedCategory;
   }
 
-  async remove(id: string): Promise<Category> {
+  async remove(id: string): Promise<CategoryDocument> {
     const category = await this.findOne(id);
 
     const deletedCategory = await this.categoryModel
