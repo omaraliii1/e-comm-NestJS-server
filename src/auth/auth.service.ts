@@ -22,7 +22,6 @@ export class AuthService {
     const createdUser = await this.userService.create(createUserDto);
     const cart = await this.cartService.create({
       user: createdUser._id.toString(),
-      totalPrice: 0,
     });
 
     createdUser.cart = cart._id;
