@@ -12,8 +12,8 @@ import {
 export class BaseReviewDto {
   @IsInt({ message: 'Rating must be an integer' })
   @IsNotEmpty({ message: 'Rating is required' })
-  @Min(1, { message: 'Rating must be at least 1' })
   @Max(5, { message: 'Rating must be at most 5' })
+  @Min(1, { message: 'Rating must be at least 1' })
   rating: number;
 
   @IsOptional()
