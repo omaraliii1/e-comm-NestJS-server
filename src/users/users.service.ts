@@ -51,12 +51,9 @@ export class UsersService {
   }
 
   async findById(id: string): Promise<UserDocument> {
-    if (!Types.ObjectId.isValid(id)) {
-      throw new NotFoundException('User not found');
-    }
     const user = await this.userModel
       .findById(id)
-      .select('username email role')
+      .select('username email role reviews')
       .exec();
     if (!user) throw new NotFoundException('User not found');
     return user;
