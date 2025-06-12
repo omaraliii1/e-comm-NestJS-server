@@ -30,7 +30,10 @@ export class CategoriesService {
   }
 
   async findOne(id: string): Promise<CategoryDocument> {
-    const category = await this.categoryModel.findById(id).exec();
+    const category = await this.categoryModel
+      .findById(id)
+      .populate('products')
+      .exec();
     if (!category) {
       throw new NotFoundException(`Category with ID "${id}" not found.`);
     }
