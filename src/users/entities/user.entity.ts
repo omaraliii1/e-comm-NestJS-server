@@ -23,7 +23,7 @@ export class User {
   @Prop({ type: Types.ObjectId, ref: 'Cart' })
   cart: Types.ObjectId;
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'Review' }] })
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'Review' }], default: [] })
   reviews: Types.ObjectId[];
 
   @Prop({ enum: EUserRole, default: EUserRole.USER })
