@@ -1,21 +1,24 @@
 import {
   ConflictException,
+  Inject,
   Injectable,
   NotFoundException,
+  forwardRef,
 } from '@nestjs/common';
 import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './entities/user.entity';
-import {
-  CreateUserDto,
-  UpdateSelfUserDto,
-  UpdateUserDto,
-} from './dto/user.dto';
+import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { hashingPassword } from 'src/common/utils/hashing';
+import { CartService } from 'src/cart/cart.service';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @Inject(forwardRef(() => CartService))
+    private cartService: CartService,
+  ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserDocument> {
     const { username, email, password } = createUserDto;
@@ -124,6 +127,7 @@ export class UsersService {
   async remove(id: string): Promise<{ message: string }> {
     const result = await this.userModel.findByIdAndDelete(id).exec();
     if (!result) throw new NotFoundException('User not found');
+    await this.cartService.deleteCart(result._id.toString());
     return { message: 'User deleted successfully' };
   }
 }
