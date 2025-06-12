@@ -21,7 +21,6 @@ export class CartController {
   constructor(private readonly cartService: CartService) {}
 
   @Post(':id')
-  @Roles(EUserRole.USER, EUserRole.ADMIN, EUserRole.SUPPLIER)
   async addProduct(
     @Param('id') productId: string,
     @CurrentUser() currentUser: IUser,
@@ -39,7 +38,6 @@ export class CartController {
   }
 
   @Delete(':id')
-  @Roles(EUserRole.USER, EUserRole.ADMIN, EUserRole.SUPPLIER)
   async deleteProduct(
     @Param('id') productId: string,
     @CurrentUser() currentUser: IUser,
@@ -57,7 +55,6 @@ export class CartController {
   }
 
   @Get(':id')
-  @Roles(EUserRole.USER, EUserRole.ADMIN, EUserRole.SUPPLIER)
   async getProducts(
     @Param('id') userId: string,
     @CurrentUser() currentUser: IUser,
