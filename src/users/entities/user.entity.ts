@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Types } from 'mongoose';
+import mongoose, { HydratedDocument, Types } from 'mongoose';
 import { EUserRole } from '../enums/user.enum';
 
 export type UserDocument = HydratedDocument<User>;
@@ -23,11 +23,23 @@ export class User {
   @Prop({ type: Types.ObjectId, ref: 'Cart' })
   cart: Types.ObjectId;
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'Review' }], default: [] })
-  reviews: Types.ObjectId[];
-
   @Prop({ enum: EUserRole, default: EUserRole.USER })
   role: EUserRole;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+UserSchema.virtual('reviews', {
+  ref: 'Review',
+  localField: '_id',
+  foreignField: 'user',
+});
+
+UserSchema.virtual('products', {
+  ref: 'Product',
+  localField: '_id',
+  foreignField: 'supplier',
+});
+
+UserSchema.set('toObject', { virtuals: true });
+UserSchema.set('toJSON', { virtuals: true });
