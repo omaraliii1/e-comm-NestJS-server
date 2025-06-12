@@ -22,16 +22,27 @@ export class BaseUserDto {
   @IsOptional()
   @IsString()
   phone_number?: string;
-
-  @IsOptional()
-  @IsEnum(EUserRole)
-  role?: EUserRole;
 }
 
 export class CreateUserDto extends BaseUserDto {
   @IsString()
   @MinLength(6)
   password: string;
+
+  @IsOptional()
+  @IsEnum(EUserRole)
+  role?: EUserRole;
 }
 
-export class UpdateUserDto extends PartialType(BaseUserDto) {}
+export class UpdateUserDto extends PartialType(BaseUserDto) {
+  @IsOptional()
+  @IsEnum(EUserRole)
+  role?: EUserRole;
+}
+
+export class UpdateSelfUserDto extends PartialType(BaseUserDto) {
+  @IsString()
+  @IsOptional()
+  @MinLength(6)
+  password?: string;
+}

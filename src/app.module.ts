@@ -5,16 +5,16 @@ import { AuthModule } from './auth/auth.module';
 import { AppController } from './app.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from './users/users.module';
-// import { ProductsModule } from './products/products.module';
 // import { CategoriesModule } from './categories/categories.module';
 // import { CartModule } from './carts/carts.module';
 import { ProductsModule } from './products/products.module';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     UsersModule,
-    // ProductsModule,
+    ProductsModule,
     // CategoriesModule,
     // CartModule,
     MongooseModule.forRoot(
@@ -23,6 +23,7 @@ import { ProductsModule } from './products/products.module';
     ),
     AuthModule,
     ProductsModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

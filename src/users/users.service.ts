@@ -3,14 +3,44 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './entities/user.entity';
-import { UpdateUserDto } from './dto/user.dto';
+import {
+  CreateUserDto,
+  UpdateSelfUserDto,
+  UpdateUserDto,
+} from './dto/user.dto';
+import { hashingPassword } from 'src/common/utils/hashing';
 
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+
+  async create(createUserDto: CreateUserDto): Promise<UserDocument> {
+    const { username, email, password } = createUserDto;
+
+    const existingUsername = await this.findByUsername(username, false);
+    if (existingUsername) {
+      throw new ConflictException(`Username ${username} already exists`);
+    }
+
+    const existingEmail = await this.findByEmail(email, false);
+    if (existingEmail) {
+      throw new ConflictException(`Email ${email} already exists`);
+    }
+
+    const hashedPassword = await hashingPassword(password);
+
+    const user = new this.userModel({
+      ...createUserDto,
+      password: hashedPassword,
+    });
+
+    await user.save();
+
+    return user;
+  }
 
   async findAllUsers(): Promise<UserDocument[]> {
     const users = this.userModel.find().select('username email role').exec();
@@ -18,6 +48,9 @@ export class UsersService {
   }
 
   async findById(id: string): Promise<UserDocument> {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new NotFoundException('User not found');
+    }
     const user = await this.userModel
       .findById(id)
       .select('username email role')

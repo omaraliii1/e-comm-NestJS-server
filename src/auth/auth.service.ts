@@ -3,13 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { CreateUserDto } from 'src/users/dto/user.dto';
 import { UsersService } from 'src/users/users.service';
 import { compareHashed, hashingPassword } from 'src/common/utils/hashing';
-import {
-  ConflictException,
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
-import { User, UserDocument } from 'src/users/entities/user.entity';
+import { ConflictException, Injectable } from '@nestjs/common';
+import { UserDocument } from 'src/users/entities/user.entity';
 import { loggedInUserResponse } from './interfaces/user.interface';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
@@ -18,36 +13,12 @@ import { LoginDto } from './dto/login.dto';
 export class AuthService {
   constructor(
     private readonly userService: UsersService,
-    @InjectModel(User.name) private userModel: Model<UserDocument>,
     private readonly jwtService: JwtService,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserDocument> {
-    const { username, email, password } = createUserDto;
-
-    const existingUsername = await this.userService.findByUsername(
-      username,
-      false,
-    );
-    if (existingUsername) {
-      throw new ConflictException(`Username ${username} already exists`);
-    }
-
-    const existingEmail = await this.userService.findByEmail(email, false);
-    if (existingEmail) {
-      throw new ConflictException(`Email ${email} already exists`);
-    }
-
-    const hashedPassword = await hashingPassword(password);
-
-    const user = new this.userModel({
-      ...createUserDto,
-      password: hashedPassword,
-    });
-
-    await user.save();
-
-    return user;
+    const createdUser = await this.userService.create(createUserDto);
+    return createdUser;
   }
 
   async login(loginDto: LoginDto): Promise<loggedInUserResponse> {
