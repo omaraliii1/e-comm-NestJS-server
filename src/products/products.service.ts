@@ -3,10 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Product, ProductDocument } from './entities/product.entity';
 import { CreateProductDto, UpdateProductDto } from './dto/product.dto';
-import {
-  Category,
-  CategoryDocument,
-} from 'src/categories/entities/category.entity';
+
 import { CategoriesService } from 'src/categories/categories.service';
 
 @Injectable()
