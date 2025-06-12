@@ -42,7 +42,6 @@ export class CartService {
 
     cart.products.push(product._id);
     cart.totalPrice += product.price;
-    cart.quantities = cart.products.length;
 
     await cart.save();
     return cart.populate('products');
@@ -70,8 +69,6 @@ export class CartService {
 
     cart.totalPrice -= product.price;
     if (cart.totalPrice < 0) cart.totalPrice = 0;
-
-    cart.quantities = cart.products.length;
 
     await cart.save();
     return cart.populate('products');
