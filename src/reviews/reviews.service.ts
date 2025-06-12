@@ -28,27 +28,16 @@ export class ReviewsService {
     const existingProduct = await this.productService.findOne(
       productId.toString(),
     );
-    if (!existingProduct) {
-      throw new NotFoundException(
-        `Product with ID "${createReviewDto.productId}" not found.`,
-      );
-    }
 
     const reviewData = {
       rating: createReviewDto.rating,
       comment: createReviewDto.comment,
-      product: productId,
+      product: existingProduct._id,
       user: userId,
     };
 
     const createdReview = await new this.reviewModel(reviewData).save();
-    const user = await this.usersService.findById(userId.toString());
 
-    user.reviews.push(createdReview._id);
-
-    await user.save();
-
-    // console.log(user.reviews);
     return createdReview.populate('user', 'email');
   }
 
@@ -74,9 +63,6 @@ export class ReviewsService {
       .find()
       .populate('user', 'username email')
       .exec();
-    if (!reviews || reviews.length === 0) {
-      throw new NotFoundException('No reviews found.');
-    }
     return reviews;
   }
 }
