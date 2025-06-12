@@ -18,12 +18,11 @@ import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { IUser } from 'src/users/interfaces/user.interface';
 import { Roles } from 'src/auth/decorators/roles.decorator';
-import { Product, ProductDocument } from './entities/product.entity';
+import { ProductDocument } from './entities/product.entity';
 import { CreateProductDto, UpdateProductDto } from './dto/product.dto';
 import { CurrentUser } from 'src/auth/decorators/currentUser.decorator';
 import { BaseResponse } from 'src/common/interfaces/responses.interface';
 import { BaseResponseHandler } from 'src/common/utils/baseResponseHandler';
-import { isUndefined } from 'util';
 
 @UseGuards(AuthGuard, RolesGuard)
 @Controller('products')
