@@ -12,11 +12,17 @@ export class Cart {
   @Prop({ type: [Types.ObjectId], ref: 'Product', default: [] })
   products: Types.ObjectId[];
 
-  @Prop({ required: true, default: 0, max: 10 })
-  quantities: number;
-
   @Prop({ required: true, default: 0 })
   totalPrice: number;
+
+  quantities: number;
 }
 
 export const CartSchema = SchemaFactory.createForClass(Cart);
+
+CartSchema.virtual('quantities').get(function () {
+  return this.products?.length || 0;
+});
+
+CartSchema.set('toObject', { virtuals: true });
+CartSchema.set('toJSON', { virtuals: true });
