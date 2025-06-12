@@ -8,17 +8,27 @@ import { UserDocument } from 'src/users/entities/user.entity';
 import { loggedInUserResponse } from './interfaces/user.interface';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
+import { CartService } from 'src/cart/cart.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UsersService,
     private readonly jwtService: JwtService,
+    private readonly cartService: CartService,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserDocument> {
     const createdUser = await this.userService.create(createUserDto);
-    return createdUser;
+    const cart = await this.cartService.create({
+      user: createdUser._id.toString(),
+      totalPrice: 0,
+    });
+
+    createdUser.cart = cart._id;
+    await createdUser.save();
+
+    return createdUser.populate('cart');
   }
 
   async login(loginDto: LoginDto): Promise<loggedInUserResponse> {
