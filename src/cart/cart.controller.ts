@@ -15,7 +15,7 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { CurrentUser } from 'src/auth/decorators/currentUser.decorator';
 import { BaseResponseHandler } from 'src/common/utils/baseResponseHandler';
 
-@Controller('cart')
+@Controller('/api/cart')
 @UseGuards(AuthGuard, RolesGuard)
 export class CartController {
   constructor(private readonly cartService: CartService) {}

@@ -19,7 +19,7 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { EUserRole } from 'src/users/enums/user.enum';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 
-@Controller('categories')
+@Controller('/api/categories')
 @UseGuards(AuthGuard, RolesGuard)
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}

@@ -25,7 +25,7 @@ import { BaseResponse } from 'src/common/interfaces/responses.interface';
 import { BaseResponseHandler } from 'src/common/utils/baseResponseHandler';
 
 @UseGuards(AuthGuard, RolesGuard)
-@Controller('products')
+@Controller('/api/products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
