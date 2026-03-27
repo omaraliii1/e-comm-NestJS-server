@@ -42,24 +42,13 @@ export class UsersController {
 
   @Patch('me')
   async updateSelf(
-    @Body() UpdateSelfUserDto: UpdateSelfUserDto,
     @CurrentUser() currentUser: IUser,
+    @Body() UpdateSelfUserDto: UpdateSelfUserDto,
   ) {
-    const updatedUser = await this.userService.updateUser(
+    const updatedUser = await this.userService.updateSelfUser(
       currentUser._id.toString(),
       UpdateSelfUserDto,
     );
-    return BaseResponseHandler.create(
-      200,
-      'User updated successfully',
-      updatedUser,
-    );
-  }
-
-  @Patch(':id')
-  @Roles(EUserRole.ADMIN)
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    const updatedUser = await this.userService.updateUser(id, updateUserDto);
     return BaseResponseHandler.create(
       200,
       'User updated successfully',
