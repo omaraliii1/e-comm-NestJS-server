@@ -21,7 +21,7 @@ import { CurrentUser } from 'src/auth/decorators/currentUser.decorator';
 import { EUserRole } from 'src/users/enums/user.enum';
 import { IUser } from 'src/users/interfaces/user.interface';
 
-@Controller('reviews')
+@Controller('/api/reviews')
 @UseGuards(AuthGuard, RolesGuard)
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
@@ -67,15 +67,4 @@ export class ReviewsController {
       deletedReview,
     );
   }
-
-  // @Get()
-  // @Roles(EUserRole.USER, EUserRole.SUPPLIER, EUserRole.ADMIN)
-  // async findAll(): Promise<BaseResponse<Review[]>> {
-  //   const reviews = await this.reviewsService.findAll();
-  //   return BaseResponseHandler.create(
-  //     HttpStatus.OK,
-  //     'Reviews retrieved successfully',
-  //     reviews,
-  //   );
-  // }
 }
