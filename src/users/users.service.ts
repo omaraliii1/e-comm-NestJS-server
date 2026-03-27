@@ -8,7 +8,11 @@ import {
 import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './entities/user.entity';
-import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
+import {
+  CreateUserDto,
+  UpdateSelfUserDto,
+  UpdateUserDto,
+} from './dto/user.dto';
 import { hashingPassword } from 'src/common/utils/hashing';
 import { CartService } from 'src/cart/cart.service';
 
@@ -88,35 +92,41 @@ export class UsersService {
     return user;
   }
 
-  async updateUser(
+  async updateSelfUser(
     userId: string,
-    updateUserDto: UpdateUserDto,
+    updateSelfUserDto: UpdateSelfUserDto,
   ): Promise<UserDocument> {
     const user = await this.findById(userId);
 
-    if (updateUserDto.username != user.username) {
+    if (updateSelfUserDto.username != user.username) {
       const existingUsername = await this.findByUsername(
-        updateUserDto.username,
+        updateSelfUserDto.username,
         false,
       );
       if (existingUsername) {
         throw new ConflictException(
-          `Username ${updateUserDto.username} already exists`,
+          `Username ${updateSelfUserDto.username} already exists`,
         );
       }
     }
 
-    if (updateUserDto.email != user.email) {
-      const existingEmail = await this.findByEmail(updateUserDto.email, false);
+    if (updateSelfUserDto.email != user.email) {
+      const existingEmail = await this.findByEmail(
+        updateSelfUserDto.email,
+        false,
+      );
       if (existingEmail) {
         throw new ConflictException(
-          `Email ${updateUserDto.email} already exists`,
+          `Email ${updateSelfUserDto.email} already exists`,
         );
       }
     }
+    const hashedPassword = await hashingPassword(updateSelfUserDto.password);
+
+    updateSelfUserDto.password = hashedPassword;
 
     const updatedUser = await this.userModel
-      .findByIdAndUpdate(userId, updateUserDto, { new: true })
+      .findByIdAndUpdate(userId, updateSelfUserDto, { new: true })
       .exec();
 
     return updatedUser;
